@@ -1,11 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Autoplay, EffectFade } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/effect-fade"
+import Image from "next/image"
 import { Mail } from "lucide-react"
 import Button from "../Button"
 
@@ -19,13 +15,13 @@ const photos = [
 /* Stagger variants */
 const containerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.13, delayChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 }
 const childVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.96 },
+  hidden: { opacity: 0, y: 15 },
   visible: {
-    opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    opacity: 1, y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 }
 
@@ -37,95 +33,64 @@ export default function PhotosScreen({ onNext }) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="bg-[#fff8fc] p-7 rounded-[60px] drop-shadow-2xl min-w-48 w-full max-w-110 relative flex flex-col items-center gap-4 my-10 card-glow overflow-hidden"
+      className="bg-[#fff8fc] p-6 rounded-[50px] drop-shadow-xl w-full max-w-110 relative flex flex-col items-center gap-4 my-6 card-glow overflow-hidden"
     >
-      {/* Floating decorations */}
+      {/* Floating decorations - reduced count */}
       {[
-        { emoji: "📸", top: "4%", left: "7%", delay: 0.2 },
-        { emoji: "💜", top: "5%", right: "8%", delay: 0.5 },
-        { emoji: "✨", bottom: "12%", left: "5%", delay: 0.7 },
-        { emoji: "🌟", bottom: "8%", right: "6%", delay: 0.4 },
+        { emoji: "📸", top: "5%", left: "8%" },
+        { emoji: "💜", top: "6%", right: "8%" },
       ].map((d, i) => (
         <motion.div
           key={i}
-          className="absolute pointer-events-none text-base select-none"
-          style={{ top: d.top, left: d.left, right: d.right, bottom: d.bottom }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.4, scale: 1 }}
-          transition={{ duration: 0.6, delay: d.delay, ease: [0.34, 1.56, 0.64, 1] }}
+          className="absolute pointer-events-none text-base opacity-30"
+          style={{ top: d.top, left: d.left, right: d.right }}
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         >
-          <motion.span
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 3.8 + i * 0.3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {d.emoji}
-          </motion.span>
+          {d.emoji}
         </motion.div>
       ))}
 
       {/* Header */}
       <motion.div variants={childVariants} className="text-center">
-        <h2 className="shimmer-text text-2xl md:text-3xl font-semibold" style={{
-          background: "linear-gradient(105deg, var(--accent) 0%, #7c5cbf 30%, #c9b8ff 50%, #7c5cbf 70%, var(--accent) 100%)",
+        <h2 className="shimmer-text text-2xl font-semibold" style={{
+          background: "linear-gradient(105deg, var(--accent) 0%, #7c5cbf 50%, var(--accent) 100%)",
           backgroundSize: "200% auto",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          animation: "shimmerSlide 3s linear infinite",
+          animation: "shimmerSlide 4s linear infinite",
         }}>
-          Some Sweet Moments
+          Sweet Moments
         </h2>
-        <p className="text-sm text-accent/60 mt-1.5">(Swipe for more)</p>
+        <p className="text-xs text-accent/50 mt-1">(Swipe left/right)</p>
       </motion.div>
 
       {/* Photo carousel box */}
       <motion.div
         variants={childVariants}
-        className="relative p-6 bg-linear-to-b from-white/80 to-violet-200 w-full rounded-[40px] flex flex-col items-center justify-center shadow-inner"
+        className="relative p-4 md:p-6 bg-linear-to-b from-white to-violet-100 w-full rounded-[40px] flex flex-col items-center justify-center shadow-inner"
       >
-        {/* Inner ambient glow */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="absolute inset-0 rounded-[40px] pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at 50% 60%, rgba(167,139,250,0.15), transparent 65%)",
-          }}
-        />
-
         <div className="relative z-10">
           <Swiper
             effect="fade"
             modules={[EffectFade, Autoplay]}
-            autoplay={{ delay: 3200, disableOnInteraction: false }}
-            className="w-53.75 h-70 md:w-59.25 md:h-77.5"
+            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            className="w-56 h-72 md:w-64 md:h-80"
             onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
           >
             {photos.map((src, i) => (
               <SwiperSlide key={i}>
-                <motion.div
-                  className="h-full w-full rounded-2xl overflow-hidden"
-                  style={{ willChange: i === activeIndex ? 'transform, opacity' : 'auto' }}
-                >
-                  <div className="relative h-full w-full rounded-2xl overflow-hidden bg-gray-100">
-                    <img
-                      loading="lazy"
-                      src={src}
-                      alt={`Memory ${i + 1}`}
-                      className="h-full w-full rounded-2xl object-cover"
-                      width={400}
-                      height={500}
-                    />
-                    {/* Subtle vignette overlay */}
-                    <div
-                      className="absolute inset-0 rounded-2xl pointer-events-none"
-                      style={{
-                        background: "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.12) 100%)",
-                      }}
-                    />
-                  </div>
-                </motion.div>
+                <div className="relative h-full w-full rounded-2xl overflow-hidden bg-gray-50 border border-violet-100">
+                  <Image
+                    src={src}
+                    alt={`Memory ${i + 1}`}
+                    fill
+                    priority={i === 0}
+                    className="object-cover rounded-2xl"
+                    sizes="(max-width: 640px) 224px, 256px"
+                  />
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>

@@ -12,7 +12,7 @@ import CreditsScreen from "@/components/screens/CreditsScreen"
 import BackgroundMusic from "@/components/BackgroundMusic"
 
 /* ── Ambient particle config ── */
-const PARTICLE_COUNT = 3 // Reduced for mobile performance
+const PARTICLE_COUNT = 6 // Base count
 const PARTICLE_COLORS = [
   "rgba(255,143,171,0.6)",
   "rgba(233,168,255,0.5)",
@@ -24,8 +24,8 @@ function AmbientParticles() {
   const [particles, setParticles] = useState([])
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 640
-    const count = isMobile ? 2 : PARTICLE_COUNT
+    const isMobile = window.innerWidth < 768
+    const count = isMobile ? 3 : PARTICLE_COUNT
 
     const seededRandom = (seed) => {
       const x = Math.sin(seed) * 10000
@@ -36,8 +36,8 @@ function AmbientParticles() {
       id: i,
       left: Math.round(seededRandom(i) * 100 * 100) / 100,
       size: Math.round((4 + seededRandom(i + 100) * 8) * 100) / 100,
-      duration: Math.round((10 + seededRandom(i + 200) * 10) * 100) / 100,
-      delay: Math.round(seededRandom(i + 300) * -15 * 100) / 100,
+      duration: Math.round((12 + seededRandom(i + 200) * 12) * 100) / 100,
+      delay: Math.round(seededRandom(i + 300) * -20 * 100) / 100,
       color: PARTICLE_COLORS[i % PARTICLE_COLORS.length],
     }))
     setParticles(newParticles)
@@ -56,8 +56,8 @@ function AmbientParticles() {
             background: p.color,
             animationDuration: `${p.duration}s`,
             animationDelay: `${p.delay}s`,
-            boxShadow: `0 0 ${p.size * 1.5}px ${p.color}`,
-            willChange: 'transform', // Optimize for mobile
+            boxShadow: `0 0 ${p.size * 1.2}px ${p.color}`,
+            willChange: 'transform',
           }}
         />
       ))}
@@ -70,11 +70,11 @@ function FloatingStars() {
   const [stars, setStars] = useState([])
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 640
+    const isMobile = window.innerWidth < 768
     const count = isMobile ? 3 : 6
     const newStars = Array.from({ length: count }, (_, i) => ({
       left: `${(i + 1) * (100 / (count + 1))}%`,
-      delay: `${i * 1.5}s`
+      delay: `${i * 2}s`
     }))
     setStars(newStars)
   }, [])
@@ -87,8 +87,8 @@ function FloatingStars() {
           bottom: -20px;
           color: white;
           font-size: 18px;
-          animation: floatStar 12s linear infinite;
-          opacity: 0.6;
+          animation: floatStar 15s linear infinite;
+          opacity: 0.5;
           pointer-events: none;
           z-index: 1;
           will-change: transform;
@@ -99,9 +99,10 @@ function FloatingStars() {
             transform: translateY(0) scale(0.8);
             opacity: 0;
           }
-          20% { opacity: 0.6; }
+          10% { opacity: 0.5; }
+          90% { opacity: 0.5; }
           100% {
-            transform: translateY(-110vh) scale(1.2);
+            transform: translateY(-110vh) scale(1);
             opacity: 0;
           }
         }
@@ -125,26 +126,43 @@ function FloatingStars() {
 
 /* ── Ambient glow orbs ── */
 function GlowOrbs() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768)
+  }, [])
+
+  if (isMobile) {
+    return (
+      <div className="glow-orb" style={{
+        width: 400, height: 400,
+        background: "radial-gradient(circle, rgba(255,143,171,0.2), transparent 70%)",
+        top: "20%", left: "10%",
+        opacity: 0.4,
+      }} />
+    )
+  }
+
   return (
     <>
       <div className="glow-orb" style={{
         width: 300, height: 300,
         background: "radial-gradient(circle, rgba(255,143,171,0.4), transparent 70%)",
         top: "-60px", left: "-40px",
-        animationDuration: "8s",
+        animationDuration: "12s",
       }} />
       <div className="glow-orb" style={{
         width: 250, height: 250,
         background: "radial-gradient(circle, rgba(151,59,136,0.35), transparent 70%)",
         bottom: "-30px", right: "-40px",
-        animationDuration: "10s",
+        animationDuration: "15s",
         animationDelay: "-4s",
       }} />
       <div className="glow-orb" style={{
         width: 200, height: 200,
         background: "radial-gradient(circle, rgba(89,75,160,0.4), transparent 70%)",
         top: "40%", left: "60%",
-        animationDuration: "10s",
+        animationDuration: "18s",
         animationDelay: "-5s",
       }} />
     </>
