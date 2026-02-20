@@ -1,6 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { motion } from "framer-motion"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Autoplay, EffectFade } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/effect-fade"
 import Image from "next/image"
 import { Mail } from "lucide-react"
 import Button from "../Button"
