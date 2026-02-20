@@ -186,24 +186,23 @@ button {
   pointer-events: none;
   z-index: 0;
   opacity: 0.3;
-  animation: orbPulse ease-in-out infinite alternate;
-  will-change: transform, opacity;
+  animation: orbPulse 10s ease-in-out infinite alternate;
+  will-change: transform;
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     filter: blur(40px);
     opacity: 0.2;
+    animation: none;
   }
 }
 
 @keyframes orbPulse {
   0% {
-    transform: scale(1) translate(0, 0);
-    opacity: 0.25;
+    transform: scale(1);
   }
 
   100% {
-    transform: scale(1.15) translate(12px, -8px);
-    opacity: 0.45;
+    transform: scale(1.1) translate(5px, -5px);
   }
 }
 
